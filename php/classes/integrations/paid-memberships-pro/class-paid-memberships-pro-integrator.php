@@ -489,7 +489,7 @@ class Paid_Memberships_Pro_Integrator extends Abstract_Integrator {
 		add_filter( 'pmpro_has_membership_access_filter', array( $this, 'access_filter' ), 10, 4 );
 		add_action( 'ssp_before_feed', array( $this, 'protect_feed_access' ) );
 
-		add_filter( 'ssp_show_media_player_in_content', function ( $show ) {
+		add_filter( '__ssp_show_media_player_in_content', function ( $show ) {
 			if ( function_exists( 'pmpro_has_membership_access' ) && ! pmpro_has_membership_access() ) {
 				return false;
 			}
