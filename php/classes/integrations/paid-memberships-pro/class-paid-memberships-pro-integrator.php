@@ -616,6 +616,8 @@ class Paid_Memberships_Pro_Integrator extends Abstract_Integrator {
 	 */
 	public function access_filter( $access, $post, $user, $post_levels ) {
 
+		return $access;
+
 		// Get level ids.
 		$post_level_ids = array_filter( array_map( function ( $item ) {
 			return isset( $item->id ) ? $item->id : null;
