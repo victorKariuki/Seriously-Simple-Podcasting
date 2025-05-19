@@ -2,9 +2,9 @@
 Contributors: PodcastMotor, psykro, zahardoc, simondowdles, hlashbrooke, whyisjake
 Tags: podcast, audio, itunes, podcasting, playlist
 Requires at least: 5.3
-Tested up to: 6.8
+Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.10.1
+Stable tag: 3.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -164,10 +164,6 @@ You can find complete user and developer documentation (along with the FAQs) on 
 15. View podcast episodes in the At A Glance widget on the main WordPress dashboard.
 
 == Changelog ==
-
-= 3.10.1 =
-2025-04-24
-[FIX] Fixed a PHP error triggered during user email updates.
 
 = 3.10.0 =
 2025-04-14
