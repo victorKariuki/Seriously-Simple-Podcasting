@@ -73,7 +73,7 @@ jobs:
 
       - name: Run Acceptance tests
         run: |
-          wp config create --dbname=wordpress_test --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1 --dbprefix=wsy_ --allow-root
+          wp config create --dbname=wordpress_test --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1 --dbprefix=test_ --allow-root
           wp config set WP_SITEURL http://localhost:8000 --type=constant --allow-root
           wp config set WP_HOME http://localhost:8000 --type=constant --allow-root
           nohup php -S localhost:8000 &
