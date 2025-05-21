@@ -115,18 +115,13 @@ class Feed_Handler implements Service {
 	 * Redirect the default feed to the default series feed
 	 * @since 3.0.0
 	 * */
-	public function redirect_default_feed( $series_slug = '' ){
+	public function redirect_default_feed(){
 		$default_series_id = ssp_get_option( 'default_series' );
 		if ( ! $default_series_id ) {
 			return;
 		}
 		$default_term = get_term_by( 'id', $default_series_id, ssp_series_taxonomy() );
 		if ( ! $default_term ) {
-			return;
-		}
-
-		// Probably this is the Polylang issue that we can't fix, but can prevent the infinite loop.
-		if ( $series_slug && $series_slug === $default_term->slug ) {
 			return;
 		}
 
@@ -323,7 +318,7 @@ class Feed_Handler implements Service {
 	public function get_podcast_description( $series_id ) {
 		$description = $this->settings_handler->get_feed_option( 'data_description', $series_id, get_bloginfo( 'description' ) );
 
-		$podcast_description = mb_substr( strip_tags( $description ), 0, 3999 );
+		$podcast_description = mb_substr( strip_tags( strval( $description ) ), 0, 3999 );
 
 		return apply_filters( 'ssp_feed_description', $podcast_description, $series_id );
 	}
