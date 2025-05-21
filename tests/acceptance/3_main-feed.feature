@@ -1,7 +1,7 @@
 Feature: Login
-	In order to test the SSP plugin
+	In order to use the default podcast
 	As an admin user
-	I need to be able to login
+	I need to create episodes and see them in the main feed
 
 	Background:
 		Given I login as admin
@@ -18,6 +18,11 @@ Feature: Login
 		Then I can see "Edit Podcast Settings"
 		And I click "View feed" link
 		Then I can see that current url is "/feed/podcast/automated-test-show"
+		And I can see "Automated test show"
+		And I can see "This show is to test some SSP functionality"
+		And I can see "Episode1"
+		And I can see "Episode2"
+		And I can see "Episode3"
 
 
 		# Check XML elements
