@@ -161,7 +161,7 @@ class Feed_Controller {
 		}
 
 		if ( ! $series_slug || ! $series_id ) {
-			$this->feed_handler->redirect_default_feed();
+			$this->feed_handler->redirect_default_feed( $series_slug );
 		}
 
 		$this->feed_handler->maybe_redirect_to_the_new_feed( $series_id );

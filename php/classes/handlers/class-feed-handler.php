@@ -115,16 +115,24 @@ class Feed_Handler implements Service {
 	 * Redirect the default feed to the default series feed
 	 * @since 3.0.0
 	 * */
-	public function redirect_default_feed(){
+	public function redirect_default_feed( $series_slug = '' ){
 		$default_series_id = ssp_get_option( 'default_series' );
-		if ( $default_series_id ) {
-			$term = get_term_by( 'id', $default_series_id, ssp_series_taxonomy() );
-			if ( $term && $term->term_id !== intval( $default_series_id )  ) {
-				$url = ssp_get_feed_url( $term->slug );
-				wp_redirect( $url );
-				exit();
-			}
+		if ( ! $default_series_id ) {
+			return;
 		}
+		$default_term = get_term_by( 'id', $default_series_id, ssp_series_taxonomy() );
+		if ( ! $default_term ) {
+			return;
+		}
+
+		// Probably this is the Polylang issue that we can't fix, but can prevent the infinite loop.
+		if ( $series_slug && $series_slug === $default_term->slug ) {
+			return;
+		}
+
+		$url = ssp_get_feed_url( $default_term->slug );
+		wp_redirect( $url );
+		exit();
 	}
 
 	/**
