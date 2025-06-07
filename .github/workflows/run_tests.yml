@@ -76,6 +76,9 @@ jobs:
           wp config create --dbname=wordpress_test --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1 --dbprefix=test_ --allow-root
           wp config set WP_SITEURL http://127.0.0.1:8080 --type=constant --allow-root
           wp config set WP_HOME http://127.0.0.1:8080 --type=constant --allow-root
+          pwd
+          ls -la
+          sudo lsof -i :8080 || true
           php -S 0.0.0.0:8080 > server.log 2>&1 &
           # Wait for PHP server to be ready
           for i in {1..30}; do
@@ -86,6 +89,8 @@ jobs:
             echo "Waiting for server..."
             sleep 1
           done
+          sudo lsof -i :8080 || true
+          curl -I http://127.0.0.1:8080/wp-login.php
           cd wp-content/plugins/seriously-simple-podcasting
           echo "SITE_URL=http://127.0.0.1:8080" >> .env.testing
           echo "SITE_USER=autotest" >> .env.testing
@@ -97,6 +102,7 @@ jobs:
           wp core update-db --allow-root
           wp theme activate twentytwentyfour --allow-root
           wp plugin install classic-editor --allow-root
+          curl -I http://127.0.0.1:8080/wp-login.php
           vendor/bin/codecept run acceptance --steps
 
       - name: Upload codeception output on failure
