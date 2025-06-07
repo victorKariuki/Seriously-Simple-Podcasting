@@ -90,9 +90,8 @@ jobs:
             sleep 1
           done
           sudo lsof -i :8000 || true
-          curl -I http://localhost:8000
+          curl -I http://localhost:8000/wp-login.php
           cd wp-content/plugins/seriously-simple-podcasting
-          curl --retry 5 --retry-connrefused --retry-delay 5 http://localhost:8000
           echo "SITE_URL=http://localhost:8000" >> .env.testing
           echo "SITE_USER=autotest" >> .env.testing
           echo "SITE_USER_PASS=password" >> .env.testing
