@@ -68,14 +68,7 @@ jobs:
           npm rebuild node-sass
           grunt uglify && grunt cssmin && npm run build
 
-      - name: Run Unit tests
-        run: cd wp-content/plugins/seriously-simple-podcasting && vendor/bin/codecept run wpunit
-
-      - name: Run Acceptance tests
-        run: |
-          wp config create --dbname=wordpress_test --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1 --dbprefix=test_ --allow-root
-          wp config set WP_SITEURL http://localhost:8000 --type=constant --allow-root
-          wp config set WP_HOME http://localhost:8000 --type=constant --allow-root
+          # Start PHP server
           nohup php -S localhost:8000 &
           # Wait for PHP server to be ready
           for i in {1..30}; do
@@ -86,6 +79,15 @@ jobs:
             echo "Waiting for server..."
             sleep 1
           done
+
+      - name: Run Unit tests
+        run: cd wp-content/plugins/seriously-simple-podcasting && vendor/bin/codecept run wpunit
+
+      - name: Run Acceptance tests
+        run: |
+          wp config create --dbname=wordpress_test --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1 --dbprefix=test_ --allow-root
+          wp config set WP_SITEURL http://localhost:8000 --type=constant --allow-root
+          wp config set WP_HOME http://localhost:8000 --type=constant --allow-root
           cd wp-content/plugins/seriously-simple-podcasting
           echo "SITE_URL=http://localhost:8000" >> .env.testing
           echo "SITE_USER=autotest" >> .env.testing
