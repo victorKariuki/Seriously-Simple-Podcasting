@@ -76,7 +76,7 @@ jobs:
           wp config create --dbname=wordpress_test --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1 --dbprefix=test_ --allow-root
           wp config set WP_SITEURL http://127.0.0.1:8080 --type=constant --allow-root
           wp config set WP_HOME http://127.0.0.1:8080 --type=constant --allow-root
-          nohup php -S 127.0.0.1:8080 &
+          nohup php -S 0.0.0.0:8080 &
           cd wp-content/plugins/seriously-simple-podcasting
           echo "SITE_URL=http://127.0.0.1:8080" >> .env.testing
           echo "SITE_USER=autotest" >> .env.testing
