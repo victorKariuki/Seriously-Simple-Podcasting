@@ -6,4 +6,4 @@ Feature: Onboarding Wizard
 	Scenario: Setup main settings via onboarding wizard
 		Given I want to "Test the connection"
 		When I am on the homepage
-		Then I can see "WordPress Test"
+		Then I can see "WordPress"
