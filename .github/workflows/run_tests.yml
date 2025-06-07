@@ -79,7 +79,7 @@ jobs:
           pwd
           ls -la
           sudo lsof -i :8000 || true
-          nohup php -S localhost:8000 > nohup.out 2>&1 &
+          nohup php -S 0.0.0.0:8000 > nohup.out 2>&1 &
           # Wait for PHP server to be ready
           for i in {1..30}; do
             if curl -s --head http://localhost:8000 | grep "200 OK" > /dev/null; then
