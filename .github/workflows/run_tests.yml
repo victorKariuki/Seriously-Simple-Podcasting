@@ -86,7 +86,6 @@ jobs:
             echo "Waiting for server..."
             sleep 1
           done
-          curl -I http://127.0.0.1:8080/wp-login.php
           cd wp-content/plugins/seriously-simple-podcasting
           echo "SITE_URL=http://127.0.0.1:8080" >> .env.testing
           echo "SITE_USER=autotest" >> .env.testing
@@ -98,7 +97,6 @@ jobs:
           wp core update-db --allow-root
           wp theme activate twentytwentyfour --allow-root
           wp plugin install classic-editor --allow-root
-          curl -I http://127.0.0.1:8080/wp-login.php
           vendor/bin/codecept run acceptance --steps
 
       - name: Upload codeception output on failure
