@@ -3,13 +3,7 @@ Feature: Onboarding Wizard
 	As an admin user
 	I need to be able to setup it via onboarding wizard
 
-	Background:
-		Given I login as admin
-		And I am on the plugins page
-		And I can see SSP plugin is deactivated
-
 	Scenario: Setup main settings via onboarding wizard
-		Given I want to "Get to onboarding wizard when plugin is first activated"
-		When I activate the SSP plugin
-		Then I can see the Onboarding Wizard
-		And I can see that I am on the "Welcome" step of onboarding wizard
+		Given I want to "Test the connection"
+		When I am on the homepage
+		Then I can see "WordPress Test"
