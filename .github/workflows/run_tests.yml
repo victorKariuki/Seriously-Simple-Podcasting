@@ -74,8 +74,8 @@ jobs:
       - name: Run Acceptance tests
         run: |
           wp config create --dbname=wordpress_test --dbuser=wordpress --dbpass=wordpress --dbhost=127.0.0.1 --dbprefix=test_ --allow-root
-          wp config set WP_SITEURL http://127.0.0.1:8000 --type=constant --allow-root
-          wp config set WP_HOME http://127.0.0.1:8000 --type=constant --allow-root
+          wp config set WP_SITEURL http://localhost:8000 --type=constant --allow-root
+          wp config set WP_HOME http://localhost:8000 --type=constant --allow-root
           php -S 0.0.0.0:8000 > server.log 2>&1 &
           # Wait for PHP server to be ready
           for i in {1..30}; do
@@ -87,7 +87,7 @@ jobs:
             sleep 1
           done
           cd wp-content/plugins/seriously-simple-podcasting
-          echo "SITE_URL=http://127.0.0.1:8000" >> .env.testing
+          echo "SITE_URL=http://localhost:8000" >> .env.testing
           echo "SITE_USER=autotest" >> .env.testing
           echo "SITE_USER_PASS=password" >> .env.testing
           echo "PODCAST_GUID=dd94465b-580a-501c-a892-caf224d23d7a" >> .env.testing
@@ -97,7 +97,7 @@ jobs:
           wp core update-db --allow-root
           wp theme activate twentytwentyfour --allow-root
           wp plugin install classic-editor --allow-root
-          curl -I http://127.0.0.1:8000/wp-login.php
+          curl -I http://localhost:8000/wp-login.php
           vendor/bin/codecept run acceptance --steps
 
       - name: Upload codeception output on failure
