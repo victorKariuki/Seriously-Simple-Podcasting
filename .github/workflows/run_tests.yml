@@ -77,15 +77,6 @@ jobs:
           wp config set WP_SITEURL http://localhost:8000 --type=constant --allow-root
           wp config set WP_HOME http://localhost:8000 --type=constant --allow-root
           php -S 0.0.0.0:8000 > server.log 2>&1 &
-          # Wait for PHP server to be ready
-          for i in {1..30}; do
-            if curl -s --head http://localhost:8000 | grep "200 OK" > /dev/null; then
-              echo "Server is up!"
-              break
-            fi
-            echo "Waiting for server..."
-            sleep 1
-          done
           cd wp-content/plugins/seriously-simple-podcasting
           echo "SITE_URL=http://localhost:8000" >> .env.testing
           echo "SITE_USER=autotest" >> .env.testing
