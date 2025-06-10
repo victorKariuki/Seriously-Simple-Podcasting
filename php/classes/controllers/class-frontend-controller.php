@@ -770,11 +770,21 @@ class Frontend_Controller {
 				// Do we have anything in Cache/DB?
 				$size = wp_cache_get( $episode_id, 'filesize_raw' );
 
+				if ( filter_input( INPUT_GET, 'ssp_debug' ) ) {
+					echo 'Size: ';
+					print_r( $size );
+				}
+
 				// Nothing in the cache, let's see if we can figure it out.
 				if ( false === $size ) {
 
 					// Do we have anything in post_meta?
 					$size = get_post_meta( $episode_id, 'filesize_raw', true );
+
+					if ( filter_input( INPUT_GET, 'ssp_debug' ) ) {
+						echo 'Size raw: ';
+						print_r( $size );
+					}
 
 					if ( empty( $size ) ) {
 
@@ -783,6 +793,10 @@ class Frontend_Controller {
 
 						if ( ! empty( $attachment_id )  ) {
 							$size = filesize( get_attached_file( $attachment_id ) );
+							if ( filter_input( INPUT_GET, 'ssp_debug' ) ) {
+								echo 'Obtained size: ';
+								print_r( $size );
+							}
 							update_post_meta( $episode_id, 'filesize_raw', $size );
 						}
 
@@ -791,6 +805,8 @@ class Frontend_Controller {
 					// Update the cache
 					wp_cache_set( $episode_id, $size, 'filesize_raw' );
 				}
+
+				$size = get_post_meta( $episode_id, 'filesize_raw', true );
 
 				// Send Content-Length header
 				if ( ! empty( $size ) ) {
