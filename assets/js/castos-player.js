@@ -322,7 +322,7 @@ docReady(function() {
 					div.innerHTML =
 						'<li class="playlist__item" data-episode="' + escapeHtml(item.episode_id) + '">' +
 						'<div class="playlist__item__cover">' +
-						'<img src="' + escapeUrl(item.album_art?.src) + '" title="' + escapeHtml(item.title) + '" alt="' + escapeHtml(item.title) + '" />' +
+						'<img src="' + escapeUrl(item.album_art && item.album_art.src ? item.album_art.src : '') + '" title="' + escapeHtml(item.title) + '" alt="' + escapeHtml(item.title) + '" />' +
 						'</div>' +
 						'<div class="playlist__item__details">' +
 						'<h2 class="playlist__episode-title" data-podcast="' + escapeHtml(item.podcast_title) + '">' + escapeHtml(item.title) + '</h2>' +
