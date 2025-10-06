@@ -165,6 +165,14 @@ You can find complete user and developer documentation (along with the FAQs) on 
 
 == Changelog ==
 
+= 3.13.0 =
+2025-10-06
+[NEW] Podcast list shortcode with sorting, colors, and other options.
+[NEW] Series-level "Mark to be Removed" setting to block podcasts from appearing in directories.
+[UPDATE] Custom episode GUID support, preserve original episode identifiers when importing RSS feeds.
+[UPDATE] Automatic permalink refresh on plugin updates to ensure proper feed URLs.
+[FIX] Fixed episode file missing message to update automatically when files are added or removed.
+
 = 3.12.0 =
 2025-08-27
 [FIX] Fixed Castos explicit sync functionality.
