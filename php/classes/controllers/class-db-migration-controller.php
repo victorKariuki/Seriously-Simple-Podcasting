@@ -61,6 +61,10 @@ class DB_Migration_Controller {
 	 * @return void
 	 */
 	public function maybe_migrate_db() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		
 		$db_version = get_option( 'ssp_db_version' );
 		if ( $db_version === SSP_VERSION ) {
 			return;
@@ -70,9 +74,23 @@ class DB_Migration_Controller {
 			case '2.9.3':
 				$this->update_date_recorded();
 				break;
+			case '3.14.1':
+				$this->restart_duplicate_guids_check();
+				break;
 		}
 
 		update_option( 'ssp_db_version', SSP_VERSION, false );
+	}
+
+	/**
+	 * Restarts the duplicate GUID check.
+	 *
+	 * @return void
+	 */
+	protected function restart_duplicate_guids_check() {
+		delete_option( 'ssp_duplicate_guids_found' );
+		delete_option( 'ssp_duplicate_guids_fix_completed' );
+		delete_option( 'ssp_duplicate_guids_notice_dismissed' );
 	}
 
 	/**
@@ -380,17 +398,14 @@ class DB_Migration_Controller {
 		// Call the fix method
 		$updated_episode_ids = $this->fix_duplicate_guids();
 
+		$this->show_fix_success_notice( $updated_episode_ids );
+
 		// Store fix completed flag
 		update_option( 'ssp_duplicate_guids_fix_completed', true );
 
 		// Remove constant notice
 		$hash = $this->admin_notices_handler->get_notice_hash( $this->get_duplicated_guid_notice_message() );
 		$this->admin_notices_handler->remove_constant_notice( $hash );
-
-		// Show success flash notice with updated episode IDs
-		if ( ! empty( $updated_episode_ids ) && $this->admin_notices_handler ) {
-			$this->show_fix_success_notice( $updated_episode_ids );
-		}
 
 		// Redirect to current page without action parameters to prevent action from being triggered again on refresh
 		$redirect_url = remove_query_arg( array( 'ssp_action', 'nonce' ) );
@@ -416,7 +431,7 @@ class DB_Migration_Controller {
 		$episode_ids_list = implode( ', ', $updated_episode_ids );
 		$success_message  = sprintf(
 			// translators: %s is a comma-separated list of episode IDs
-			__( 'Duplicate GUIDs have been fixed. Updated episodes: %s', 'seriously-simple-podcasting' ),
+			__( 'Fixing duplicate GUIDs has been completed. Updated episode IDs: %s', 'seriously-simple-podcasting' ),
 			$episode_ids_list
 		);
 		$this->admin_notices_handler->add_flash_notice( $success_message, Admin_Notifications_Handler::SUCCESS );
@@ -464,17 +479,6 @@ class DB_Migration_Controller {
 						$this->update_episode_guid( $episode->ID, $old_guid, $new_guid );
 						$updated_episode_ids[] = $episode->ID;
 					}
-				}
-			}
-
-			// Remove current episode ID from map after checking
-			// This ensures the original episode keeps its GUID
-			if ( isset( $guid_map[ $guid ] ) ) {
-				$key = array_search( $episode->ID, $guid_map[ $guid ], true );
-				if ( false !== $key ) {
-					unset( $guid_map[ $guid ][ $key ] );
-					// Re-index array
-					$guid_map[ $guid ] = array_values( $guid_map[ $guid ] );
 				}
 			}
 		}
