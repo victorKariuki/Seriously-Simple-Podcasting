@@ -19,6 +19,55 @@ import DateInput from './Sidebar/DateInput';
 import CastosUploader from './Sidebar/CastosUploader';
 import SyncStatus from './Sidebar/SyncStatus';
 
+/**
+ * Format bytes to human-readable format matching PHP format_bytes function
+ *
+ * @param {number} size File size in bytes
+ * @param {number} precision Number of decimal places (default: 2)
+ * @return {string|false} Formatted file size or false on failure
+ */
+const formatBytes = ( size, precision = 2 ) => {
+	if ( ! size ) {
+		return false;
+	}
+
+	const base = Math.log( size ) / Math.log( 1024 );
+	const suffixes = [ '', 'k', 'M', 'G', 'T' ];
+	const value = Math.pow( 1024, base - Math.floor( base ) );
+	const roundedValue = Math.round( value * Math.pow( 10, precision ) ) / Math.pow( 10, precision );
+	const formattedSize = roundedValue + suffixes[ Math.floor( base ) ];
+
+	return formattedSize;
+};
+
+/**
+ * Normalize duration string to SSP format (H:i:s with hours always included).
+ * WordPress Media Library may provide "0:28" (no hours), but SSP uses "00:00:28" format.
+ * If duration already has 3 parts, it's already in the correct format.
+ *
+ * @param {string} duration Duration string (e.g., "0:28" or "00:42:17")
+ * @return {string} Normalized duration in H:i:s format (e.g., "00:00:28")
+ */
+const normalizeDurationToSspFormat = ( duration ) => {
+	if ( ! duration || typeof duration !== 'string' ) {
+		return '';
+	}
+
+	// Parse the duration string
+	const parts = duration.split(':');
+
+	if ( parts.length !== 2 ) {
+		// This is either H:MM:SS or unknown format - return as-is
+		return duration;
+	}
+	
+	// Format: "M:SS" - add hours as "00" to match SSP format
+	const minutes = parseInt( parts[0], 10 );
+	const seconds = parseInt( parts[1], 10 );
+	const pad = ( num ) => num.toString().padStart(2, '0');
+	return `00:${pad(minutes)}:${pad(seconds)}`;
+};
+
 const EpisodeMetaSidebar = () => {
 
 	const editor = useSelect(( select ) => select('core/editor'));
@@ -147,6 +196,40 @@ const EpisodeMetaSidebar = () => {
 		}
 	};
 
+	/**
+	 * Update audio-related fields when selecting a media library file.
+	 *
+	 * @param {Object} media Media object from WordPress Media Library.
+	 */
+	const handleAudioUpdate = ( media ) => {
+		console.log('handleAudioUpdate! Media object:', media);
+		handleFieldChange('audio_file', media.url, true);
+
+		// Extract file size from Media Library metadata if available
+		if ( media.filesizeInBytes ) {
+			handleFieldChange('filesize_raw', media.filesizeInBytes.toString(), true);
+			// Format using SSP's format_bytes function to match PHP implementation
+			const formattedSize = formatBytes( media.filesizeInBytes );
+
+			handleFieldChange('filesize', formattedSize || media.filesizeHumanReadable, true);
+		}
+
+		// Extract duration from Media Library metadata if available
+		// WordPress provides fileLength at top level for audio/video files
+		// Media Library format may be "0:28" or "00:42:17", but SSP uses "00:00:28" (always with hours)
+		if ( media?.fileLength ) {
+			const normalizedDuration = normalizeDurationToSspFormat( media.fileLength );
+			if ( normalizedDuration ) {
+				handleFieldChange('duration', normalizedDuration, true);
+			}
+		}
+
+		// If the file has a date, always update Date Recorded to that date; otherwise fall back to today.
+		const fileDate = media?.date ? new Date( media.date ) : new Date();
+		const isoDate = fileDate.toISOString().slice(0, 10);
+		handleFieldChange('date_recorded', isoDate, true);
+	};
+
 	const removeCoverImage = ( event ) => {
 		event.stopPropagation();
 		handleFieldChange('cover_image', '', true);
@@ -214,7 +297,7 @@ const EpisodeMetaSidebar = () => {
 							{ ! isCastosUser && <FileUploader
 								audioUrl={ audioFile }
 								onChangeUrl={ ( value ) => handleFieldChange('audio_file', value, true) }
-								onSelectAudio={ ( media ) => handleFieldChange('audio_file', media.url, true) }
+								onSelectAudio={ ( media ) => handleAudioUpdate( media ) }
 							/>
 							}
 							{ isCastosUser && <CastosUploader
