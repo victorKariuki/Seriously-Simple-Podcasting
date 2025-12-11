@@ -202,7 +202,6 @@ const EpisodeMetaSidebar = () => {
 	 * @param {Object} media Media object from WordPress Media Library.
 	 */
 	const handleAudioUpdate = ( media ) => {
-		console.log('handleAudioUpdate! Media object:', media);
 		handleFieldChange('audio_file', media.url, true);
 
 		// Extract file size from Media Library metadata if available
