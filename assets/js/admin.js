@@ -55,6 +55,45 @@ jQuery(document).ready(function($) {
 		return '00:' + pad( minutes ) + ':' + pad( seconds );
 	}
 
+	/**
+	 * Populate filesize, duration, and date recorded fields from a media attachment.
+	 *
+	 * @param {Object} attachment Media attachment object from wp.media (toJSON()).
+	 */
+	function populateAudioMetaFromAttachment( attachment ) {
+		// File size
+		if ( attachment.filesizeInBytes ) {
+			$( '#filesize_raw' ).val( attachment.filesizeInBytes.toString() ).trigger( 'change' );
+			var formattedSize = formatBytes( attachment.filesizeInBytes );
+			if ( formattedSize ) {
+				$( '#filesize' ).val( formattedSize ).trigger( 'change' );
+			}
+		}
+
+		// Duration
+		if ( attachment.fileLength ) {
+			var normalizedDuration = normalizeDurationToSspFormat( attachment.fileLength );
+			if ( normalizedDuration ) {
+				$( '#duration' ).val( normalizedDuration ).trigger( 'change' );
+			}
+		}
+
+		// Date recorded
+		var $dateRecorded = $( '#date_recorded' );
+		if ( $dateRecorded.length ) {
+			var attachmentDate = attachment.date ? new Date( attachment.date ) : new Date();
+			var isoDate = attachmentDate.toISOString().slice( 0, 10 );
+			$dateRecorded.val( isoDate ).trigger( 'change' );
+
+			// Also update display field if present (datepicker display)
+			var $dateRecordedDisplay = $( '#date_recorded_display' );
+			if ( $dateRecordedDisplay.length ) {
+				var display = attachmentDate.toLocaleDateString( undefined, { day: 'numeric', month: 'long', year: 'numeric' } );
+				$dateRecordedDisplay.val( display );
+			}
+		}
+	}
+
 	$.fn.ssp_upload_media_file = function( button, validateCallback = null ) {
 		//var button_id = button.attr('id');
 		var field_class = button.data( 'field' );
@@ -84,39 +123,7 @@ jQuery(document).ready(function($) {
 
 			// Extract file size and duration from Media Library metadata for audio_file field
 			if ( field_class === 'ssp-field-audio_file' ) {
-				// Extract file size if available
-				if ( attachment.filesizeInBytes ) {
-					$('#filesize_raw').val( attachment.filesizeInBytes.toString() ).trigger('change');
-					var formattedSize = formatBytes( attachment.filesizeInBytes );
-					if ( formattedSize ) {
-						$('#filesize').val( formattedSize ).trigger('change');
-					} else if ( attachment.filesizeHumanReadable ) {
-						$('#filesize').val( attachment.filesizeHumanReadable ).trigger('change');
-					}
-				}
-
-				// Extract duration if available
-				if ( attachment.fileLength ) {
-					var normalizedDuration = normalizeDurationToSspFormat( attachment.fileLength );
-					if ( normalizedDuration ) {
-						$('#duration').val( normalizedDuration ).trigger('change');
-					}
-				}
-
-				// Update Date Recorded from file date when available; otherwise set to today
-				var $dateRecorded = $('#date_recorded');
-				if ( $dateRecorded.length ) {
-					var attachmentDate = attachment.date ? new Date( attachment.date ) : new Date();
-					var isoDate = attachmentDate.toISOString().slice(0, 10);
-					$dateRecorded.val( isoDate ).trigger('change');
-
-					// Also update display field if present (datepicker display)
-					var $dateRecordedDisplay = $('#date_recorded_display');
-					if ( $dateRecordedDisplay.length ) {
-						var display = attachmentDate.toLocaleDateString( undefined, { day: 'numeric', month: 'long', year: 'numeric' } );
-						$dateRecordedDisplay.val( display );
-					}
-				}
+				populateAudioMetaFromAttachment( attachment );
 			}
 		});
 
