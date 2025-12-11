@@ -2,9 +2,9 @@
 Contributors: PodcastMotor, psykro, zahardoc, simondowdles, hlashbrooke, whyisjake
 Tags: podcast, audio, itunes, podcasting, playlist
 Requires at least: 5.3
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.14.0
+Stable tag: 3.14.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -164,6 +164,12 @@ You can find complete user and developer documentation (along with the FAQs) on 
 15. View podcast episodes in the At A Glance widget on the main WordPress dashboard.
 
 == Changelog ==
+
+= 3.14.1 =
+2025-12-11
+[NEW] Dynamically update episode file properties (duration, file size, date recorded) when uploading audio files from Media Library
+[UPDATE] Enhanced Castos sync status handling in settings
+[FIX] Improved GUID fixer functionality
 
 = 3.14.0 =
 2025-11-10
