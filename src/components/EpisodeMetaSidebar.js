@@ -224,8 +224,13 @@ const EpisodeMetaSidebar = () => {
 		}
 
 		// If the file has a date, always update Date Recorded to that date; otherwise fall back to today.
+		// Format date in local timezone (YYYY-MM-DD) to avoid UTC conversion issues
+		// media.date is a UTC timestamp, but we want the local date
 		const fileDate = media?.date ? new Date( media.date ) : new Date();
-		const isoDate = fileDate.toISOString().slice(0, 10);
+		const year = fileDate.getFullYear();
+		const month = String( fileDate.getMonth() + 1 ).padStart( 2, '0' );
+		const day = String( fileDate.getDate() ).padStart( 2, '0' );
+		const isoDate = year + '-' + month + '-' + day;
 		handleFieldChange('date_recorded', isoDate, true);
 	};
 

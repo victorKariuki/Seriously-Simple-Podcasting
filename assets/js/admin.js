@@ -82,7 +82,12 @@ jQuery(document).ready(function($) {
 		var $dateRecorded = $( '#date_recorded' );
 		if ( $dateRecorded.length ) {
 			var attachmentDate = attachment.date ? new Date( attachment.date ) : new Date();
-			var isoDate = attachmentDate.toISOString().slice( 0, 10 );
+			// Format date in local timezone (YYYY-MM-DD) to avoid UTC conversion issues
+			// attachment.date is a UTC timestamp, but we want the local date
+			var year = attachmentDate.getFullYear();
+			var month = String( attachmentDate.getMonth() + 1 ).padStart( 2, '0' );
+			var day = String( attachmentDate.getDate() ).padStart( 2, '0' );
+			var isoDate = year + '-' + month + '-' + day;
 			$dateRecorded.val( isoDate ).trigger( 'change' );
 
 			// Also update display field if present (datepicker display)
@@ -117,7 +122,7 @@ jQuery(document).ready(function($) {
 			}
 
 			$('input.' + field_class).val(attachment.url).trigger('change');
-			if ( preview_class ) {
+			if ( preview_class ) {	
 				$('.' + preview_class).attr('src', attachment.url);
 			}
 
