@@ -4,7 +4,7 @@ Tags: podcast, audio, itunes, podcasting, playlist
 Requires at least: 5.3
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.14.1
+Stable tag: 3.14.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -164,6 +164,14 @@ You can find complete user and developer documentation (along with the FAQs) on 
 15. View podcast episodes in the At A Glance widget on the main WordPress dashboard.
 
 == Changelog ==
+
+= 3.14.2 =
+2026-01-05
+[FIX] Improved file download logic with request-time validation
+[FIX] Fixed filesize_raw field not saving correctly
+[FIX] Fixed file size conversion issue
+[FIX] Improved security for podcast_episode shortcode
+[FIX] Always apply ssp_file_duration filter
 
 = 3.14.1 =
 2025-12-11
