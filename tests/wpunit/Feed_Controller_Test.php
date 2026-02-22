@@ -73,7 +73,7 @@ class Feed_Controller_Test extends WPTestCase {
 			'<googleplay:description></googleplay:description>',
 			'<googleplay:explicit>No</googleplay:explicit>',
 			'<podcast:guid>',
-			sprintf('<!-- podcast_generator="SSP by Castos/%s" Seriously Simple Podcasting plugin for WordPress (https://wordpress.org/plugins/seriously-simple-podcasting/) -->', SSP_VERSION),
+			sprintf('<!-- podcast_generator="Simple Podcasting by Victor Kariuki/%s" Fork of SSP -->', SSP_VERSION),
 			sprintf('<generator>https://wordpress.org/?v=%s</generator>', $wp_version),
 
 

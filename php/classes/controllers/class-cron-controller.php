@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * SSP Episode Controller
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 class Cron_Controller {
 

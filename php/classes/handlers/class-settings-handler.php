@@ -8,7 +8,7 @@ use SeriouslySimplePodcasting\Repositories\Settings_Config;
 /**
  * SSP Settings Handler
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 class Settings_Handler implements Service {
 
@@ -34,9 +34,8 @@ class Settings_Handler implements Service {
 			'feed-details'    => $this->get_feed_settings(),
 			'security'        => $this->get_security_settings(),
 			'publishing'      => $this->get_publishing_settings(),
-			'castos-hosting'  => $this->get_hosting_settings(),
 			'import'          => $this->get_import_settings(),
-			'extensions'      => $this->get_extensions_settings(),
+			'pages'           => $this->get_pages_settings(),
 		);
 
 		$integrations = $this->get_integrations_settings();
@@ -156,6 +155,15 @@ class Settings_Handler implements Service {
 	 */
 	public function get_extensions_settings() {
 		return ssp_config( 'settings/extensions' );
+	}
+
+	/**
+	 * Pages (podcast app) settings – custom section with CRUD UI.
+	 *
+	 * @return array
+	 */
+	public function get_pages_settings() {
+		return ssp_config( 'settings/pages' );
 	}
 
 	/**

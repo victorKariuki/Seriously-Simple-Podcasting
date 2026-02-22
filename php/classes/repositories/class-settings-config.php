@@ -11,7 +11,7 @@ use SeriouslySimplePodcasting\Interfaces\Service;
  * Used to access settings on demand (lazy loading).
  *
  * @since 3.7.1
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 class Settings_Config implements Service, ArrayAccess, Countable, IteratorAggregate {
 	/**

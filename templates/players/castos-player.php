@@ -24,7 +24,7 @@
  **/
 
 ?>
-<div id="<?php echo esc_attr( $player_id ); ?>" class="castos-player <?php echo esc_attr( $player_mode ) ?>-mode <?php echo esc_attr( $class )
+<div id="<?php echo esc_attr( $player_id ); ?>" class="ssp-html-player <?php echo esc_attr( $player_mode ) ?>-mode <?php echo esc_attr( $class )
      ?>" tabindex="0" data-episode="<?php echo esc_attr( $episode_id ) ?>" data-player_id="<?php echo esc_attr( $player_id ); ?>">
 	<div class="player">
 		<div class="player__main">

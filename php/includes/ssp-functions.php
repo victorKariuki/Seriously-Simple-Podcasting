@@ -26,7 +26,7 @@ if ( ! function_exists( 'ssp_version_notice' ) ) {
 	 * @return void
 	 */
 	function ssp_version_notice() {
-		$beta_notice = __( 'You are using the Seriously Simple Podcasting %1$s, connected to %2$s', 'seriously-simple-podcasting' );
+		$beta_notice = __( 'You are using the Simple Podcasting %1$s, connected to %2$s', 'seriously-simple-podcasting' );
 		?>
 		<div class="notice notice-warning">
 			<p>
@@ -64,7 +64,7 @@ if ( ! function_exists( 'ssp_php_version_notice' ) ) {
 	 * @return void
 	 */
 	function ssp_php_version_notice() {
-		$error_notice         = __( 'The Seriously Simple Podcasting plugin requires PHP version 5.6 or higher. Please contact your web host to upgrade your PHP version or deactivate the plugin.', 'seriously-simple-podcasting' );
+		$error_notice         = __( 'The Simple Podcasting plugin requires PHP version 5.6 or higher. Please contact your web host to upgrade your PHP version or deactivate the plugin.', 'seriously-simple-podcasting' );
 		$error_notice_apology = __( 'We apologise for any inconvenience.', 'seriously-simple-podcasting' );
 		?>
 		<div class="error">
@@ -102,7 +102,7 @@ if ( ! function_exists( 'ssp_vendor_notice' ) ) {
 	 * @return void
 	 */
 	function ssp_vendor_notice() {
-		$error_notice         = __( 'The Seriously Simple Podcasting vendor directory is missing or broken, please re-download/reinstall the plugin.', 'seriously-simple-podcasting' );
+		$error_notice         = __( 'The Simple Podcasting vendor directory is missing or broken, please re-download/reinstall the plugin.', 'seriously-simple-podcasting' );
 		$error_notice_apology = __( 'We apologise for any inconvenience.', 'seriously-simple-podcasting' );
 		?>
 		<div class="error">
@@ -132,7 +132,7 @@ if ( ! function_exists( 'ssp_is_vendor_ok' ) ) {
 
 if ( ! function_exists( 'ssp_get_upload_directory' ) ) {
 	/**
-	 * Gets the temporary Seriously Simple Podcasting upload directory
+	 * Gets the temporary Simple Podcasting upload directory
 	 * Typically ../wp-content/uploads/ssp
 	 * If it does not already exist, attempts to create it
 	 *
@@ -745,19 +745,8 @@ if ( ! function_exists( 'ssp_is_connected_to_castos' ) ) {
 	 * @return bool
 	 */
 	function ssp_is_connected_to_castos() {
-		$is_connected = false;
-		$cache_key    = 'ssp_is_connected_to_castos';
-		if ( $cache = wp_cache_get( $cache_key ) ) {
-			return $cache;
-		}
-		$podmotor_api_token = get_option( 'ss_podcasting_podmotor_account_api_token', '' );
-		if ( ! empty( $podmotor_api_token ) ) {
-			$is_connected = true;
-		}
-
-		wp_cache_add( $cache_key, $is_connected );
-
-		return $is_connected;
+		// Castos connection disabled; plugin works without Castos hosting.
+		return false;
 	}
 }
 
@@ -1042,7 +1031,7 @@ if ( ! function_exists( 'ssp_check_if_podcast_has_elementor_player' ) ) {
 			return true;
 		}
 		$player_mode        = get_option( 'ss_podcasting_player_mode', 'dark' );
-		$html_player_string = '<div id="embed-app" class="' . $player_mode . '-mode castos-player" data-episode="' . $podcast_id . '">';
+		$html_player_string = '<div id="embed-app" class="' . $player_mode . '-mode ssp-html-player" data-episode="' . $podcast_id . '">';
 		if ( strstr( $content, $html_player_string ) ) {
 			return true;
 		}
@@ -1088,12 +1077,11 @@ if ( ! function_exists( 'get_series_data_for_castos' ) ) {
 	 * @return array
 	 */
 	function get_series_data_for_castos( $series_id ) {
-		/**
-		 * @var Castos_Handler $castos_handler
-		 * */
+		if ( ! ssp_is_connected_to_castos() ) {
+			return array();
+		}
 		$castos_handler = ssp_get_service( 'castos_handler' );
-
-		return $castos_handler->generate_series_data_for_castos( $series_id );
+		return $castos_handler ? $castos_handler->generate_series_data_for_castos( $series_id ) : array();
 	}
 }
 

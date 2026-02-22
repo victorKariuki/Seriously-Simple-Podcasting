@@ -151,7 +151,7 @@ class Ajax_Handler {
 			// We use SYNC_STATUS_ constants for both episode sync statuses and podcast sync statuses. Might be changed in the future.
 			$msgs = array(
 				Sync_Status::SYNC_STATUS_SYNCING             => __(
-					'Seriously Simple Podcasting is updating episode data to your Castos account. You can refresh this page to view the updated status in a few minutes.',
+					'Simple Podcasting is updating episode data to your Castos account. You can refresh this page to view the updated status in a few minutes.',
 					'seriously-simple-podcasting'
 				),
 				Sync_Status::SYNC_STATUS_SYNCED_WITH_ERRORS => __( 'Started the sync process with errors', 'seriously-simple-podcasting' ),

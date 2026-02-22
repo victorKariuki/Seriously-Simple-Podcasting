@@ -8,7 +8,7 @@ use SeriouslySimplePodcasting\Interfaces\Service;
 /**
  * SSP Custom Post Type Podcast Handler
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  * @since 2.6.3 Moved from the admin controller class
  */
 class CPT_Podcast_Handler implements Service {
@@ -190,14 +190,6 @@ class CPT_Podcast_Handler implements Service {
 				'section'          => 'info',
 				'meta_description' => __( 'Seriously Simple Hosting file id.', 'seriously-simple-podcasting' ),
 			);
-		} else {
-			$description = __( 'Get lower bandwidth fees, file storage, and better stats when hosting with Castos.', 'seriously-simple-podcasting' );
-			$btn         = array(
-				'title' => 'Try Castos for free',
-				'url'   => 'https://castos.com/podcast-hosting-wordpress/?utm_source=ssp&utm_medium=episode-file-box&utm_campaign=upgrade'
-			);
-
-			$fields['audio_file']['description'] .= ssp_upsell_field( $description, $btn );
 		}
 
 		$post = get_post();

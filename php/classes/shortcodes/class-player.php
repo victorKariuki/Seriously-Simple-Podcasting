@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Seriously Simple Podcasting HTML 5 media player
+ * Simple Podcasting HTML 5 media player
  *
  * @author     Jonathan Bossenger
  * @package    SeriouslySimplePodcasting

@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Assets_Controller
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 class Assets_Controller {
 
@@ -31,6 +31,51 @@ class Assets_Controller {
 
 		// Register HTML5 player scripts and styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_html5_player_assets' ) );
+		// Podcast app (Spotify-style) assets – conditional load on app pages
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_app_assets' ), 15 );
+	}
+
+	/**
+	 * Whether the current request is for a podcast app page or single episode with app template.
+	 *
+	 * @return bool
+	 */
+	protected function is_podcast_app_page() {
+		$pages_option = get_option( 'ss_podcasting_pages', array() );
+		$page_ids     = array_filter( array_map( 'absint', $pages_option ) );
+		$queried_id   = get_queried_object_id();
+		if ( $queried_id && in_array( $queried_id, $page_ids, true ) ) {
+			return true;
+		}
+		if ( is_singular( SSP_CPT_PODCAST ) && 'on' === get_option( 'ss_podcasting_app_single_episode', '' ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Enqueue podcast app CSS/JS and Castos player when viewing an app page.
+	 */
+	public function enqueue_app_assets() {
+		if ( ! $this->is_podcast_app_page() ) {
+			return;
+		}
+		wp_enqueue_style(
+			'ssp-app',
+			esc_url( SSP_PLUGIN_URL . 'assets/css/ssp-app.css' ),
+			array(),
+			$this->version
+		);
+		wp_enqueue_script(
+			'ssp-app',
+			esc_url( SSP_PLUGIN_URL . 'assets/js/ssp-app.js' ),
+			array(),
+			$this->version,
+			true
+		);
+		// Ensure Castos player is available on app pages (episode detail uses it).
+		wp_enqueue_script( 'ssp-castos-player' );
+		wp_enqueue_style( 'ssp-castos-player' );
 	}
 
 	/**

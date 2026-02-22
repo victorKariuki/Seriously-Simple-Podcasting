@@ -37,7 +37,7 @@ class Castos_Response extends Abstract_API_Entity {
 		try {
 			$translations = array (
 				wp_hash( 'Authentication failed! Invalid or missing Access Token!' ) => __( 'Authentication failed! Invalid or missing Access Token!' ),
-				wp_hash( 'Seriously Simple Podcasting has successfully connected to your Castos account.' ) => __( 'Seriously Simple Podcasting has successfully connected to your Castos account.' ),
+				wp_hash( 'Simple Podcasting has successfully connected to your Castos account.' ) => __( 'Simple Podcasting has successfully connected to your Castos account.' ),
 			);
 			$msg_key = wp_hash( $text );
 			if ( ! array_key_exists( $msg_key, $translations ) ) {

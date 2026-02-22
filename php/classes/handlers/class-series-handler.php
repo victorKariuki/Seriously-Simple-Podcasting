@@ -9,7 +9,7 @@ use SeriouslySimplePodcasting\Traits\Useful_Variables;
 /**
  * SSP Series Handler
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 class Series_Handler implements Service {
 

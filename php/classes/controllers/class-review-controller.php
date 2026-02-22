@@ -9,7 +9,7 @@ use SeriouslySimplePodcasting\Traits\Useful_Variables;
 /**
  * SSP Settings
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 
 // Exit if accessed directly.

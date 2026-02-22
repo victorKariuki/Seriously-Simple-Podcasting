@@ -16,7 +16,7 @@ use SeriouslySimplePodcasting\Interfaces\Service;
  *
  * @author Andrew Moore, Serhiy Zakharchenko
  * @link http://www.php.net/manual/en/function.uniqid.php#94959
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 class UUID_Handler implements Service {
 	/**

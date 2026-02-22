@@ -402,9 +402,12 @@ class Admin_Notifications_Handler implements Service {
 	 * @todo: investigate if it works and maybe replace it with add_predefined_flash_notice();
 	 */
 	public function blocks_error_notice() {
+		$plugin_dir = str_replace( ABSPATH, '', SSP_PLUGIN_PATH );
 		?>
-		<div class="notice notice-info">
-			<p><?php _e( 'An error has occurred loading the block editor assets. Please report this to the plugin developer.', 'seriousy-simple-podcasting' ); ?></p>
+		<div class="notice notice-warning">
+			<p><?php _e( 'Simple Podcasting: Block editor assets are missing. To build them, run in your terminal (from the plugin folder):', 'seriously-simple-podcasting' ); ?></p>
+			<p><code>cd <?php echo esc_html( $plugin_dir ); ?> && npm install && npm run build</code></p>
+			<p><?php _e( 'Blocks (e.g. Podcast Player, Episode List) will not appear in the editor until the build is complete.', 'seriously-simple-podcasting' ); ?></p>
 		</div>
 		<?php
 	}
@@ -512,7 +515,7 @@ class Admin_Notifications_Handler implements Service {
 		$elementor_templates_link = sprintf(
 			wp_kses(
 			// translators: Placeholder is the url to dismiss the message
-				__( 'Using Elementor? Seriously Simple Podcasting now has built in Elementor templates to build podcast specific pages. <a href="%s">Click here to install them now.</a> ', 'seriously-simple-podcasting' ),
+				__( 'Using Elementor? Simple Podcasting now has built in Elementor templates to build podcast specific pages. <a href="%s">Click here to install them now.</a> ', 'seriously-simple-podcasting' ),
 				array(
 					'a' => array(
 						'href' => array(),
@@ -520,7 +523,7 @@ class Admin_Notifications_Handler implements Service {
 					),
 				)
 			),
-			esc_url( admin_url( 'edit.php?post_type=' . SSP_CPT_PODCAST . '&page=podcast_settings&tab=extensions' ) )
+			esc_url( admin_url( 'edit.php?post_type=' . SSP_CPT_PODCAST . '&page=podcast_settings' ) )
 		);
 
 		$ignore_message_url = add_query_arg( array( 'ssp_disable_elementor_template_notice' => 'true' ) );
@@ -564,7 +567,7 @@ class Admin_Notifications_Handler implements Service {
 			self::NOTICE_NGINX_ERROR => array(
 				'msg' => sprintf( __(
 					"We've detected that your website is using NGINX.
-					In order for Seriously Simple Podcasting to play your episodes, you'll need to reach out to your web host or system administrator and follow the instructions outlined in this <a href='%s'>help document.</a>",
+					In order for Simple Podcasting to play your episodes, you'll need to reach out to your web host or system administrator and follow the instructions outlined in this <a href='%s'>help document.</a>",
 					'seriously-simple-podcasting'
 				), esc_url( 'https://support.castos.com/article/298-bypass-rules-for-nginx-hosted-websites' ) ),
 				'type' => self::ERROR,

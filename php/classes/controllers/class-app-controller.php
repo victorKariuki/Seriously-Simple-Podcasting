@@ -431,7 +431,6 @@ class App_Controller {
 
 
 			// Dashboard widgets.
-			add_action( 'wp_dashboard_setup', array( $this, 'ssp_dashboard_setup' ) );
 			add_filter( 'dashboard_glance_items', array( $this, 'glance_items' ), 10, 1 );
 
 			// Appreciation links.
@@ -601,8 +600,8 @@ class App_Controller {
 		if ( ! isset( $plugin_data['slug'] ) || $this->plugin_slug != $plugin_data['slug'] ) {
 			return $plugin_meta;
 		}
-		$plugin_meta['docs']   = '<a href="https://support.castos.com/?utm_medium=sspodcasting&utm_source=wordpress&utm_campaign=wpplugin_08_2019" target="_blank">' . __( 'Documentation', 'seriously-simple-podcasting' ) . '</a>';
-		$plugin_meta['addons'] = '<a href="https://castos.com/add-ons/?utm_medium=sspodcasting&utm_source=wordpress&utm_campaign=wpplugin_08_2019" target="_blank">' . __( 'Add-ons', 'seriously-simple-podcasting' ) . '</a>';
+		$plugin_meta['docs']   = '<a href="https://wordpress.org/plugins/seriously-simple-podcasting/#description" target="_blank" rel="noopener">' . __( 'Documentation', 'seriously-simple-podcasting' ) . '</a>';
+		$plugin_meta['addons'] = '<a href="https://wordpress.org/plugins/seriously-simple-podcasting/" target="_blank" rel="noopener">' . __( 'Plugin page', 'seriously-simple-podcasting' ) . '</a>';
 		$plugin_meta['review'] = '<a href="https://wordpress.org/support/view/plugin-reviews/' . $plugin_data['slug'] . '?rate=5#postform" target="_blank">' . __( 'Write a review', 'seriously-simple-podcasting' ) . '</a>';
 
 		return $plugin_meta;
@@ -714,7 +713,7 @@ class App_Controller {
 
 			// Change the footer text
 			if ( ! get_option( 'ssp_admin_footer_text_rated' ) ) {
-				$footer_text = sprintf( __( 'If you like %1$sSeriously Simple Podcasting%2$s please leave a %3$s&#9733;&#9733;&#9733;&#9733;&#9733;%4$s rating. A huge thank you in advance!', 'seriously-simple-podcasting' ), '<strong>', '</strong>', '<a href="https://wordpress.org/support/plugin/seriously-simple-podcasting/reviews/?rate=5#new-post" target="_blank" class="ssp-rating-link" data-rated="' . __( 'Thanks!', 'seriously-simple-podcasting' ) . '">', '</a>' );
+				$footer_text = sprintf( __( 'If you like %1$sSimple Podcasting%2$s please leave a %3$s&#9733;&#9733;&#9733;&#9733;&#9733;%4$s rating. A huge thank you in advance!', 'seriously-simple-podcasting' ), '<strong>', '</strong>', '<a href="https://wordpress.org/support/plugin/seriously-simple-podcasting/reviews/?rate=5#new-post" target="_blank" class="ssp-rating-link" data-rated="' . __( 'Thanks!', 'seriously-simple-podcasting' ) . '">', '</a>' );
 				$footer_text .= sprintf( "<script type='text/javascript'>
 					(function($){
 					  $('a.ssp-rating-link').on('click', function() {
@@ -723,7 +722,7 @@ class App_Controller {
 					})})(jQuery);
 				</script>", wp_create_nonce( 'ssp_rated' ) );
 			} else {
-				$footer_text = sprintf( __( '%1$sThank you for publishing with %2$sSeriously Simple Podcasting%3$s.%4$s', 'seriously-simple-podcasting' ), '<span id="footer-thankyou">', '<a href="https://castos.com/seriously-simple-podcasting/" target="_blank">', '</a>', '</span>' );
+				$footer_text = sprintf( __( '%1$sThank you for publishing with %2$sSimple Podcasting%3$s.%4$s', 'seriously-simple-podcasting' ), '<span id="footer-thankyou">', '<a href="https://castos.com/seriously-simple-podcasting/" target="_blank">', '</a>', '</span>' );
 			}
 
 		}
@@ -776,11 +775,11 @@ class App_Controller {
 			$submit = sanitize_text_field( $_POST['Submit'] );
 		}
 
-		// The user has submitted the Import your podcast setting
+		// The user has submitted the Import your podcast setting (Castos sync - no-op when not connected)
 		$trigger_import_submit = __( 'Trigger sync', 'seriously-simple-podcasting' );
 		if ( $trigger_import_submit === $submit ) {
 			$import = sanitize_text_field( $_POST['ss_podcasting_podmotor_import'] );
-			if ( 'on' === $import ) {
+			if ( 'on' === $import && ssp_is_connected_to_castos() ) {
 				$result = $this->castos_handler->trigger_podcast_import();
 				if ( 'success' !== $result['status'] ) {
 					add_action( 'admin_notices', array( $this, 'trigger_import_error' ) );

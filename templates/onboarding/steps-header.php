@@ -13,13 +13,13 @@ $steps = array(
 );
 ?>
 <div class="ssp-onboarding__logo">
-	<img alt="Seriously Simple Podcasting" src="<?php echo SSP_PLUGIN_URL . '/assets/admin/img/logo.png'; ?>">
+	<img alt="Simple Podcasting" src="<?php echo SSP_PLUGIN_URL . '/assets/admin/img/logo.png'; ?>">
 	<div class="ssp-onboarding__logo-text">
 		<span class="ssp-onboarding__logo-title">
-			<?php _e( 'Seriously Simple Podcasting', 'seriously-simple-podcasting' ); ?>
+			<?php _e( 'Simple Podcasting', 'seriously-simple-podcasting' ); ?>
 		</span>
 		<span class="ssp-onboarding__logo-label">
-			<?php _e( 'By Castos', 'seriously-simple-podcasting' ); ?>
+			<?php _e( 'by Victor Kariuki', 'seriously-simple-podcasting' ); ?>
 		</span>
 	</div>
 </div>

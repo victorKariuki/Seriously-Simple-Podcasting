@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Seriously Simple Podcasting Abstract Widget Class
+ * Simple Podcasting Abstract Widget Class
  *
  * @author    Serhiy Zakharchenko
  * @package   SeriouslySimplePodcasting

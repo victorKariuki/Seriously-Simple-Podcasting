@@ -18,7 +18,7 @@ use WP_Query;
  *    from the request parameters.
  *
  * @author Jonathan Bossenger
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  * @since 1.19.12
  */
 

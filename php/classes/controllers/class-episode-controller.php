@@ -10,7 +10,7 @@ use WP_Query;
 /**
  * SSP Episode Controller
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  *
  * @deprecated Almost all episode-related functions now in Episode_Repository or Frontend_Controller.
  * So lets just get rid of this class.

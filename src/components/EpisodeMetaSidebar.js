@@ -14,7 +14,6 @@ import classnames from 'classnames';
 import ImageUploader from './Sidebar/ImageUploader';
 import FileUploader from './Sidebar/FileUploader';
 import Dynamo from './Sidebar/Dynamo';
-import Promo from './Sidebar/Promo';
 import DateInput from './Sidebar/DateInput';
 import CastosUploader from './Sidebar/CastosUploader';
 import SyncStatus from './Sidebar/SyncStatus';
@@ -182,7 +181,7 @@ const EpisodeMetaSidebar = () => {
 	return (
 		<PluginSidebar
 			name="ssp-episode-meta-sidebar"
-			title={ __('Seriously Simple Podcasting', 'seriously-simple-podcasting') }
+			title={ __('Simple Podcasting', 'seriously-simple-podcasting') }
 			className="ssp-episode-meta-sidebar"
 			icon={ <img src={ SSPIcon } className="ssp-open" alt="SSP Icon"/> }
 		>
@@ -238,14 +237,6 @@ const EpisodeMetaSidebar = () => {
 							</div>
 
 
-						</div>
-
-						<div className="ssp-sidebar-field-section">
-							<Promo
-								description={ __('Get lower bandwidth fees, file storage, and better stats when hosting with Castos.', 'seriously-simple-podcasting') }
-								title={ __('Try Castos for free', 'seriously-simple-podcasting') }
-								url={ 'https://castos.com/podcast-hosting-wordpress/?utm_source=ssp&amp;utm_medium=episode-file-box&amp;utm_campaign=upgrade' }
-							/>
 						</div>
 
 					</div>

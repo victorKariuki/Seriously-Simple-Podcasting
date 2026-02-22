@@ -180,7 +180,7 @@ if ( $stylesheet_url ) {
 		?><podcast:guid><?php echo esc_attr( $guid ) ?></podcast:guid>
 		<?php endif; ?>
 
-		<!-- podcast_generator="SSP by Castos/<?php echo SSP_VERSION ?>" Seriously Simple Podcasting plugin for WordPress (https://wordpress.org/plugins/seriously-simple-podcasting/) -->
+		<!-- podcast_generator="Simple Podcasting by Victor Kariuki/<?php echo SSP_VERSION ?>" Fork of SSP -->
 		<?php
 
 		// Prevent WP core from outputting an <image> element

@@ -36,5 +36,12 @@ return array(
 			'type'        => 'text',
 			'default'     => ssp_series_slug(),
 		),
+		array(
+			'id'          => 'app_single_episode',
+			'label'       => __( 'Use podcast app layout for single episodes', 'seriously-simple-podcasting' ),
+			'description' => __( 'When enabled, single episode pages use the plugin app template and shortcode instead of your theme.', 'seriously-simple-podcasting' ),
+			'type'        => 'checkbox',
+			'default'     => '',
+		),
 	),
 );

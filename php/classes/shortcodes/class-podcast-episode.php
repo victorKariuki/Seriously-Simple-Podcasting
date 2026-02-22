@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Seriously Simple Podcasting Recent Podcast Episodes Widget
+ * Simple Podcasting Recent Podcast Episodes Widget
  *
  * @author        Hugh Lashbrooke
  * @package    SeriouslySimplePodcasting

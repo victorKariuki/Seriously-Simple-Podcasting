@@ -8,9 +8,9 @@ use SeriouslySimplePodcasting\Handlers\Series_Handler;
 use SeriouslySimplePodcasting\Repositories\Episode_Repository;
 
 /**
- * Extending the WP REST API for Seriously Simple Podcasting
+ * Extending the WP REST API for Simple Podcasting
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  * @since 1.19.12
  */
 

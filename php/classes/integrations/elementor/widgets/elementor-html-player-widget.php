@@ -31,11 +31,11 @@ class Elementor_Html_Player_Widget extends Widget_Base {
 	}
 
 	public function get_name() {
-		return 'Castos Player';
+		return 'SSP HTML5 Player';
 	}
 
 	public function get_title() {
-		return __( 'Castos Player', 'seriously-simple-podcasting' );
+		return __( 'Podcast Player', 'seriously-simple-podcasting' );
 	}
 
 	public function get_icon() {

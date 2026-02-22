@@ -2,7 +2,6 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
-use SeriouslySimplePodcasting\Entities\Castos_File_Data;
 use SeriouslySimplePodcasting\Repositories\Episode_Repository;
 use SeriouslySimplePodcasting\Traits\Useful_Variables;
 
@@ -114,6 +113,29 @@ class Frontend_Controller {
 		add_action( 'plugins_loaded', array( $this, 'load_localisation' ) );
 
 		add_filter( "archive_template_hierarchy", array( $this, 'fix_template_hierarchy' ) );
+
+		// Optional: use podcast app template for single episode when enabled.
+		add_filter( 'template_include', array( $this, 'maybe_use_app_single_episode_template' ), 99 );
+	}
+
+	/**
+	 * Use plugin app template for single episode when option is enabled.
+	 *
+	 * @param string $template Current template path.
+	 * @return string
+	 */
+	public function maybe_use_app_single_episode_template( $template ) {
+		if ( ! is_singular( SSP_CPT_PODCAST ) ) {
+			return $template;
+		}
+		if ( 'on' !== get_option( 'ss_podcasting_app_single_episode', '' ) ) {
+			return $template;
+		}
+		$app_template = SSP_PLUGIN_PATH . 'templates/frontend/single-episode-wrapper.php';
+		if ( file_exists( $app_template ) ) {
+			return $app_template;
+		}
+		return $template;
 	}
 
 	/**
@@ -836,9 +858,10 @@ class Frontend_Controller {
 	 * @return string
 	 */
 	protected function get_file_name( $episode_id ) {
-		$file_data = new Castos_File_Data(
-			json_decode( get_post_meta( $episode_id, 'castos_file_data', true ), true )
-		);
+		$meta   = json_decode( get_post_meta( $episode_id, 'castos_file_data', true ), true );
+		$path   = is_array( $meta ) && isset( $meta['path'] ) ? $meta['path'] : '';
+		$name   = is_array( $meta ) && isset( $meta['name'] ) ? $meta['name'] : '';
+		$file_data = (object) array( 'path' => $path, 'name' => $name );
 
 		$allowed_extensions = array( 'm4a', 'mp3', 'mov', 'mp4' );
 		$file_name          = $file_data->name;
@@ -979,7 +1002,7 @@ class Frontend_Controller {
 		// Allow generator tags to be hidden if necessary
 		if ( apply_filters( 'ssp_show_generator_tag', true, $type ) ) {
 
-			$generator = 'Seriously Simple Podcasting ' . esc_attr( $this->version );
+			$generator = 'Simple Podcasting ' . esc_attr( $this->version );
 
 			switch ( $type ) {
 				case 'html':

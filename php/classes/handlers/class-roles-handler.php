@@ -7,7 +7,7 @@ use SeriouslySimplePodcasting\Interfaces\Service;
 /**
  * SSP Roles Handler
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 class Roles_Handler implements Service {
 

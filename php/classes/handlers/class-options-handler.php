@@ -7,7 +7,7 @@ use SeriouslySimplePodcasting\Interfaces\Service;
 /**
  * SSP Options Handler
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 class Options_Handler implements Service {
 

@@ -7,7 +7,7 @@ use SeriouslySimplePodcasting\Interfaces\Service;
 /**
  * SSP Roles Handler
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  * @since 2.6.3
  */
 class Images_Handler implements Service {

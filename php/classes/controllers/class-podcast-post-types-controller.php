@@ -2,7 +2,6 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
-use SeriouslySimplePodcasting\Entities\Castos_File_Data;
 use SeriouslySimplePodcasting\Entities\Sync_Status;
 use SeriouslySimplePodcasting\Handlers\Admin_Notifications_Handler;
 use SeriouslySimplePodcasting\Handlers\CPT_Podcast_Handler;
@@ -220,6 +219,9 @@ class Podcast_Post_Types_Controller {
 	 * @throws \Exception
 	 */
 	public function maybe_update_sync_status( $episode_id, $episode_status ) {
+		if ( ! ssp_is_connected_to_castos() ) {
+			return;
+		}
 		$series_id      = ssp_get_episode_series_id( $episode_id );
 		$podcast_status = $this->series_handler->get_sync_status( $series_id );
 		$syncing        = Sync_Status::SYNC_STATUS_SYNCING;
@@ -663,8 +665,10 @@ class Podcast_Post_Types_Controller {
 
 					case 'episode_file':
 						$is_castos = ssp_is_connected_to_castos();
-						$file_data = new Castos_File_Data(
-							json_decode( get_post_meta( $post_id, 'castos_file_data', true ), true )
+						$meta      = json_decode( get_post_meta( $post_id, 'castos_file_data', true ), true );
+						$file_data = (object) array(
+							'path' => is_array( $meta ) && isset( $meta['path'] ) ? $meta['path'] : '',
+							'name' => is_array( $meta ) && isset( $meta['name'] ) ? $meta['name'] : '',
 						);
 						$html      .= $renderer->fetch(
 							'metafields/episode_file',

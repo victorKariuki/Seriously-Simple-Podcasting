@@ -12,7 +12,7 @@ use WP_Term;
  *
  * Used to set or get specific data for repository
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  * @since 3.0.1
  */
 class Series_Repository implements Singleton {

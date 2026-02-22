@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Ads Controller
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  * @author Serhiy Zakharchenko
  * @since 2.24.0
  */

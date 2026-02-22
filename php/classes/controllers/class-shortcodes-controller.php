@@ -2,10 +2,15 @@
 
 namespace SeriouslySimplePodcasting\Controllers;
 
+use SeriouslySimplePodcasting\ShortCodes\Episode_Detail;
 use SeriouslySimplePodcasting\ShortCodes\Player;
 use SeriouslySimplePodcasting\ShortCodes\Podcast;
 use SeriouslySimplePodcasting\ShortCodes\Podcast_Episode;
+use SeriouslySimplePodcasting\ShortCodes\Podcast_Home;
+use SeriouslySimplePodcasting\ShortCodes\Podcast_Library;
 use SeriouslySimplePodcasting\ShortCodes\Podcast_Playlist;
+use SeriouslySimplePodcasting\ShortCodes\Podcast_Search;
+use SeriouslySimplePodcasting\ShortCodes\Series_Profile;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -51,6 +56,11 @@ class Shortcodes_Controller extends Controller {
 		add_shortcode( 'ss_podcast', array( new Podcast(), 'shortcode' ) );
 		add_shortcode( 'podcast_episode', array( new Podcast_Episode(), 'shortcode' ) );
 		add_shortcode( 'podcast_playlist', array( new Podcast_Playlist(), 'shortcode' ) );
+		add_shortcode( 'ssp_podcast_home', array( new Podcast_Home(), 'shortcode' ) );
+		add_shortcode( 'ssp_episode_detail', array( new Episode_Detail(), 'shortcode' ) );
+		add_shortcode( 'ssp_series_profile', array( new Series_Profile(), 'shortcode' ) );
+		add_shortcode( 'ssp_podcast_library', array( new Podcast_Library(), 'shortcode' ) );
+		add_shortcode( 'ssp_podcast_search', array( new Podcast_Search(), 'shortcode' ) );
 	}
 
 }

@@ -110,7 +110,7 @@ class Series_Controller {
 			if ( ! ssp_get_default_series_id() ) {
 				$notice = sprintf(
 					__( 'The Default Podcast was not found! <br />
-			Please try to disable and then re-enable the Seriously Simple Podcasting plugin. <br />
+			Please try to disable and then re-enable the Simple Podcasting plugin. <br />
 			If this message persists, kindly reach out to us via the <a target="_blank" href="%s">plugin forum</a> for further assistance.',
 						'seriously-simple-podcasting' ),
 					'https://wordpress.org/support/plugin/seriously-simple-podcasting/'

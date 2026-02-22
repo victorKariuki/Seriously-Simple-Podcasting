@@ -7,7 +7,7 @@ namespace SeriouslySimplePodcasting\Handlers;
  * SSP Series_Walker
  * Customizes the series checklist output
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  * @since 3.0.0
  */
 class Series_Walker extends \Walker_Category_Checklist {

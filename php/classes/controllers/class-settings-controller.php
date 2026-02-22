@@ -16,7 +16,7 @@ use SeriouslySimplePodcasting\Traits\Useful_Variables;
 /**
  * SSP Settings
  *
- * @package Seriously Simple Podcasting
+ * @package Simple Podcasting
  */
 
 // Exit if accessed directly.
@@ -120,6 +120,9 @@ class Settings_Controller {
 
 		//Todo: Can we use pre_update_option_ss_podcasting_data_title action instead?
 		add_action( 'admin_init', array( $this, 'maybe_feed_saved' ), 11 );
+
+		// Handle Pages CRUD actions before register_settings.
+		add_action( 'admin_init', array( $this, 'handle_pages_crud_actions' ), 9 );
 
 		// Register podcast settings.
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
@@ -284,11 +287,6 @@ class Settings_Controller {
 			$this,
 			'settings_page',
 		) );
-
-		add_submenu_page( 'edit.php?post_type=podcast' . SSP_CPT_PODCAST, __( 'Extensions', 'seriously-simple-podcasting' ), __( 'Extensions', 'seriously-simple-podcasting' ), 'manage_podcast', 'podcast_settings&tab=extensions', array(
-			$this,
-			'settings_page',
-		) );
 	}
 
 	/**
@@ -300,11 +298,7 @@ class Settings_Controller {
 	 */
 	public function add_plugin_links( $links ) {
 		$settings_link = '<a href="edit.php?post_type=' . SSP_CPT_PODCAST . '&page=podcast_settings">' . __( 'Settings', 'seriously-simple-podcasting' ) . '</a>';
-		$upgrade_link = '<a href="https://castos.com/podcast-hosting-wordpress/?utm_source=ssp&utm_medium=plugin-settings&utm_campaign=upgrade">' . __( 'Upgrade', 'seriously-simple-podcasting' ) . '</a>';
-
 		array_unshift( $links, $settings_link );
-		array_push( $links, $upgrade_link );
-
 		return $links;
 	}
 
@@ -571,19 +565,210 @@ class Settings_Controller {
 				}
 				break;
 
-			case 'extensions':
-				$html .= $this->render_seriously_simple_extensions();
-				break;
-
 			case 'integrations':
 				$integration = $this->get_current_integration();
 				if ( ! empty( $this->settings['integrations']['items'][ $integration ]['description'] ) ) {
 					$html = '<p>' . $this->settings['integrations']['items'][ $integration ]['description'] . '</p>' . "\n";
 				}
 				break;
+
+			case 'pages':
+				$html .= $this->render_pages_crud_section();
+				break;
 		}
 
 		echo $html;
+	}
+
+	/**
+	 * Page types and their shortcodes for the podcast app.
+	 *
+	 * @return array
+	 */
+	protected function get_podcast_page_types() {
+		return array(
+			'podcast_home' => array(
+				'label'     => __( 'Home / Browse', 'seriously-simple-podcasting' ),
+				'shortcode' => '[ssp_podcast_home]',
+			),
+			'episode'      => array(
+				'label'     => __( 'Episode detail', 'seriously-simple-podcasting' ),
+				'shortcode' => '[ssp_episode_detail]',
+			),
+			'series'       => array(
+				'label'     => __( 'Show / Series', 'seriously-simple-podcasting' ),
+				'shortcode' => '[ssp_series_profile]',
+			),
+			'library'      => array(
+				'label'     => __( 'Library', 'seriously-simple-podcasting' ),
+				'shortcode' => '[ssp_podcast_library]',
+			),
+			'search'       => array(
+				'label'     => __( 'Search', 'seriously-simple-podcasting' ),
+				'shortcode' => '[ssp_podcast_search]',
+			),
+		);
+	}
+
+	/**
+	 * Render the Pages CRUD section (table + Create/Assign/Remove).
+	 *
+	 * @return string
+	 */
+	public function render_pages_crud_section() {
+		$pages_option = get_option( 'ss_podcasting_pages', array() );
+		$defaults     = array(
+			'podcast_home' => 0,
+			'episode'      => 0,
+			'series'       => 0,
+			'library'      => 0,
+			'search'       => 0,
+		);
+		$pages_option = wp_parse_args( $pages_option, $defaults );
+		$page_types   = $this->get_podcast_page_types();
+		$all_pages    = get_posts( array(
+			'post_type'      => 'page',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		) );
+		$settings_url = add_query_arg( array(
+			'post_type' => SSP_CPT_PODCAST,
+			'page'      => 'podcast_settings',
+			'tab'       => 'pages',
+		), admin_url( 'edit.php' ) );
+
+		$html = '<table class="widefat striped ssp-pages-crud-table" style="max-width: 800px;">';
+		$html .= '<thead><tr><th>' . esc_html__( 'Page type', 'seriously-simple-podcasting' ) . '</th>';
+		$html .= '<th>' . esc_html__( 'Assigned page', 'seriously-simple-podcasting' ) . '</th>';
+		$html .= '<th>' . esc_html__( 'Actions', 'seriously-simple-podcasting' ) . '</th></tr></thead><tbody>';
+
+		foreach ( $page_types as $page_type_key => $info ) {
+			$page_id = isset( $pages_option[ $page_type_key ] ) ? (int) $pages_option[ $page_type_key ] : 0;
+			$post    = $page_id ? get_post( $page_id ) : null;
+			$html   .= '<tr><td>' . esc_html( $info['label'] ) . '</td><td>';
+			if ( $post && 'page' === $post->post_type ) {
+				$view_url = get_permalink( $post );
+				$edit_url = get_edit_post_link( $post->ID, 'raw' );
+				$html    .= '<strong>' . esc_html( $post->post_title ) . '</strong>';
+				$html    .= ' <a href="' . esc_url( $view_url ) . '" target="_blank">' . esc_html__( 'View', 'seriously-simple-podcasting' ) . '</a>';
+				if ( $edit_url ) {
+					$html .= ' | <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'seriously-simple-podcasting' ) . '</a>';
+				}
+			} else {
+				$html .= '—';
+			}
+			$html .= '</td><td>';
+			// Create page.
+			$html .= '<form method="post" action="' . esc_url( $settings_url ) . '" style="display:inline;">';
+			$html .= '<input type="hidden" name="ssp_pages_action" value="ssp_create_page" />';
+			$html .= '<input type="hidden" name="ssp_page_type" value="' . esc_attr( $page_type_key ) . '" />';
+			$html .= wp_nonce_field( 'ssp_pages_crud', 'ssp_pages_nonce', true, false );
+			$html .= '<button type="submit" class="button button-small">' . esc_html__( 'Create page', 'seriously-simple-podcasting' ) . '</button></form> ';
+			// Assign existing page.
+			$html .= '<form method="post" action="' . esc_url( $settings_url ) . '" style="display:inline;">';
+			$html .= '<input type="hidden" name="ssp_pages_action" value="ssp_assign_page" />';
+			$html .= '<input type="hidden" name="ssp_page_type" value="' . esc_attr( $page_type_key ) . '" />';
+			$html .= wp_nonce_field( 'ssp_pages_crud', 'ssp_pages_nonce', true, false );
+			$html .= '<select name="ssp_page_id" style="max-width: 200px;">';
+			$html .= '<option value="">' . esc_html__( '— Select page —', 'seriously-simple-podcasting' ) . '</option>';
+			foreach ( $all_pages as $p ) {
+				$selected = ( (int) $p->ID === $page_id ) ? ' selected="selected"' : '';
+				$html    .= '<option value="' . esc_attr( $p->ID ) . '"' . $selected . '>' . esc_html( $p->post_title ) . '</option>';
+			}
+			$html .= '</select> <button type="submit" class="button button-small">' . esc_html__( 'Assign', 'seriously-simple-podcasting' ) . '</button></form> ';
+			// Remove.
+			if ( $page_id ) {
+				$html .= '<form method="post" action="' . esc_url( $settings_url ) . '" style="display:inline;">';
+				$html .= '<input type="hidden" name="ssp_pages_action" value="ssp_remove_page" />';
+				$html .= '<input type="hidden" name="ssp_page_type" value="' . esc_attr( $page_type_key ) . '" />';
+				$html .= wp_nonce_field( 'ssp_pages_crud', 'ssp_pages_nonce', true, false );
+				$html .= '<button type="submit" class="button button-small" onclick="return confirm(\'' . esc_js( __( 'Unassign this page?', 'seriously-simple-podcasting' ) ) . '\');">' . esc_html__( 'Remove', 'seriously-simple-podcasting' ) . '</button></form>';
+			}
+			$html .= '</td></tr>';
+		}
+		$html .= '</tbody></table>';
+		return $html;
+	}
+
+	/**
+	 * Handle Create / Assign / Remove actions for podcast app pages.
+	 */
+	public function handle_pages_crud_actions() {
+		$page = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+		if ( 'podcast_settings' !== $page ) {
+			$page = isset( $_POST['page'] ) ? sanitize_text_field( wp_unslash( $_POST['page'] ) ) : '';
+		}
+		$tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : '';
+		if ( ! $tab && isset( $_POST['tab'] ) ) {
+			$tab = sanitize_text_field( wp_unslash( $_POST['tab'] ) );
+		}
+		if ( 'podcast_settings' !== $page || 'pages' !== $tab ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$action = isset( $_POST['ssp_pages_action'] ) ? sanitize_text_field( wp_unslash( $_POST['ssp_pages_action'] ) ) : '';
+		if ( ! in_array( $action, array( 'ssp_create_page', 'ssp_assign_page', 'ssp_remove_page' ), true ) ) {
+			return;
+		}
+		if ( ! isset( $_POST['ssp_pages_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['ssp_pages_nonce'] ) ), 'ssp_pages_crud' ) ) {
+			return;
+		}
+		$page_type = isset( $_POST['ssp_page_type'] ) ? sanitize_key( wp_unslash( $_POST['ssp_page_type'] ) ) : '';
+		$page_types = $this->get_podcast_page_types();
+		if ( ! isset( $page_types[ $page_type ] ) ) {
+			return;
+		}
+
+		$pages_option = get_option( 'ss_podcasting_pages', array() );
+		$defaults     = array(
+			'podcast_home' => 0,
+			'episode'      => 0,
+			'series'       => 0,
+			'library'      => 0,
+			'search'       => 0,
+		);
+		$pages_option = wp_parse_args( $pages_option, $defaults );
+
+		switch ( $action ) {
+			case 'ssp_create_page':
+				$info   = $page_types[ $page_type ];
+				$title  = $info['label'];
+				$post_id = wp_insert_post( array(
+					'post_type'    => 'page',
+					'post_title'  => $title,
+					'post_content' => $info['shortcode'],
+					'post_status' => 'publish',
+					'post_author' => get_current_user_id(),
+				) );
+				if ( $post_id && ! is_wp_error( $post_id ) ) {
+					update_post_meta( $post_id, '_ssp_app_page_type', $page_type );
+					$pages_option[ $page_type ] = $post_id;
+					update_option( 'ss_podcasting_pages', $pages_option );
+				}
+				break;
+			case 'ssp_assign_page':
+				$assign_id = isset( $_POST['ssp_page_id'] ) ? absint( $_POST['ssp_page_id'] ) : 0;
+				$pages_option[ $page_type ] = $assign_id;
+				update_option( 'ss_podcasting_pages', $pages_option );
+				break;
+			case 'ssp_remove_page':
+				$pages_option[ $page_type ] = 0;
+				update_option( 'ss_podcasting_pages', $pages_option );
+				break;
+		}
+
+		$redirect = add_query_arg( array(
+			'post_type' => SSP_CPT_PODCAST,
+			'page'      => 'podcast_settings',
+			'tab'       => 'pages',
+			'settings-updated' => 'true',
+		), admin_url( 'edit.php' ) );
+		wp_safe_redirect( $redirect );
+		exit;
 	}
 
 	/**
@@ -782,7 +967,7 @@ class Settings_Controller {
 				break;
 		}
 
-		if ( 'import' !== $tab ) {
+		if ( 'import' !== $tab && 'pages' !== $tab ) {
 			$html .= '<form method="post" action="options.php" enctype="multipart/form-data">' . "\n";
 
 			// Add current series to posted data
@@ -828,7 +1013,7 @@ class Settings_Controller {
 	protected function show_tab_after_settings( $tab ) {
 		$html = '';
 
-		$disable_save_button_on_tabs = array( 'extensions', 'import' );
+		$disable_save_button_on_tabs = array( 'import', 'pages' );
 
 		if ( ! in_array( $tab, $disable_save_button_on_tabs ) ) {
 			$button_text = isset( $this->settings[$tab]['button_text'] ) ?
@@ -846,7 +1031,9 @@ class Settings_Controller {
 			$html .= '</p>' . "\n";
 		}
 
-		$html .= '</form>' . "\n";
+		if ( 'import' !== $tab && 'pages' !== $tab ) {
+			$html .= '</form>' . "\n";
+		}
 
 		return apply_filters( sprintf( 'ssp_settings_show_tab_%s_after_settings', $tab ), $html );
 	}
@@ -987,13 +1174,7 @@ class Settings_Controller {
 	 * @return string
 	 */
 	public function render_seriously_simple_sidebar() {
-		if(ssp_is_connected_to_castos()){
-			return '';
-		}
-		$image_dir = $this->assets_url . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR;
-		$img = '<img src="' . esc_attr( $image_dir ) . 'castos-plugin-settings-banner.jpg">';
-
-		return $this->renderer->fetch( 'settings-sidebar', compact( 'img' ) );
+		return '';
 	}
 
 	public function render_seriously_simple_extensions() {
@@ -1006,12 +1187,12 @@ class Settings_Controller {
 				'title'       => __( 'Castos Podcast Hosting', 'seriously-simple-podcasting' ),
 				'image'       => $image_dir . 'castos-icon-extension.jpg',
 				'url'         => SSP_CASTOS_APP_URL,
-				'description' => __( 'Host your podcast media files safely and securely in a CDN-powered cloud platform designed specifically to connect beautifully with Seriously Simple Podcasting.  Faster downloads, better live streaming, and take back security for your web server with Castos.', 'seriously-simple-podcasting' ),
+				'description' => __( 'Host your podcast media files safely and securely in a CDN-powered cloud platform designed specifically to connect beautifully with Simple Podcasting.  Faster downloads, better live streaming, and take back security for your web server with Castos.', 'seriously-simple-podcasting' ),
 				'button_text' => __( 'Get Castos Hosting', 'seriously-simple-podcasting' ),
 				'new_window'  => true,
 			),
 			'stats'                => array(
-				'title'       => __( 'Seriously Simple Podcasting Stats', 'seriously-simple-podcasting' ),
+				'title'       => __( 'Simple Podcasting Stats', 'seriously-simple-podcasting' ),
 				'image'       => $image_dir . 'ssp-stats.jpg',
 				'url'         => add_query_arg(
 					array(
@@ -1029,7 +1210,7 @@ class Settings_Controller {
 				'description' => __( 'Seriously Simple Stats offers integrated analytics for your podcast, giving you access to incredibly useful information about who is listening to your podcast and how they are accessing it.', 'seriously-simple-podcasting' ),
 			),
 			'transcripts'          => array(
-				'title'       => __( 'Seriously Simple Podcasting Transcripts', 'seriously-simple-podcasting' ),
+				'title'       => __( 'Simple Podcasting Transcripts', 'seriously-simple-podcasting' ),
 				'image'       => $image_dir . 'ssp-transcripts.jpg',
 				'url'         => add_query_arg(
 					array(
@@ -1047,7 +1228,7 @@ class Settings_Controller {
 				'description' => __( 'Seriously Simple Transcripts gives you a simple and automated way for you to add downloadable transcripts to your podcast episodes. It’s an easy way for you to provide episode transcripts to your listeners without taking up valuable space in your episode content.', 'seriously-simple-podcasting' ),
 			),
 			'speakers'             => array(
-				'title'       => __( 'Seriously Simple Podcasting Speakers', 'seriously-simple-podcasting' ),
+				'title'       => __( 'Simple Podcasting Speakers', 'seriously-simple-podcasting' ),
 				'image'       => $image_dir . 'ssp-speakers.jpg',
 				'url'         => add_query_arg(
 					array(
@@ -1065,7 +1246,7 @@ class Settings_Controller {
 				'description' => __( 'Does your podcast have a number of different speakers? Or maybe a different guest each week? Perhaps you have unique hosts for each episode? If any of those options describe your podcast then Seriously Simple Speakers is the add-on for you!', 'seriously-simple-podcasting' ),
 			),
 			'genesis'              => array(
-				'title'       => __( 'Seriously Simple Podcasting Genesis Support ', 'seriously-simple-podcasting' ),
+				'title'       => __( 'Simple Podcasting Genesis Support ', 'seriously-simple-podcasting' ),
 				'image'       => $image_dir . 'ssp-genesis.jpg',
 				'url'         => add_query_arg(
 					array(
@@ -1080,7 +1261,7 @@ class Settings_Controller {
 					)
 				),
 				'thickbox'    => true,
-				'description' => __( 'The Genesis compatibility add-on for Seriously Simple Podcasting gives you full support for the Genesis theme framework. It adds support to the podcast post type for the features that Genesis requires. If you are using Genesis and Seriously Simple Podcasting together then this plugin will make your website look and work much more smoothly.', 'seriously-simple-podcasting' ),
+				'description' => __( 'The Genesis compatibility add-on for Simple Podcasting gives you full support for the Genesis theme framework. It adds support to the podcast post type for the features that Genesis requires. If you are using Genesis and Simple Podcasting together then this plugin will make your website look and work much more smoothly.', 'seriously-simple-podcasting' ),
 			),
 			'paid-memberships-pro' => array(
 				'title'       => __( 'Paid Memberships Pro', 'seriously-simple-podcasting' ),
@@ -1097,7 +1278,7 @@ class Settings_Controller {
 				'title'       => __( 'Elementor Templates', 'seriously-simple-podcasting' ),
 				'image'       => $image_dir . 'elementor.jpg',
 				'url'         => wp_nonce_url( admin_url( 'edit.php?post_type=' . SSP_CPT_PODCAST . '&page=podcast_settings&tab=extensions&elementor_import_templates=true' ), '', 'import_template_nonce' ),
-				'description' => __( 'Looking for a custom elementor template to use with Seriously Simple Podcasting? Click here to import all of them righ now!', 'seriously-simple-podcasting' ),
+				'description' => __( 'Looking for a custom elementor template to use with Simple Podcasting? Click here to import all of them righ now!', 'seriously-simple-podcasting' ),
 				'button_text' => __( 'Import Templates', 'seriously-simple-podcasting' ),
 			);
 			$extensions = array_slice($extensions, 0, 1, true) + array("elementor-templates" =>  $elementor_templates) + array_slice($extensions, 1, count($extensions)-1, true);

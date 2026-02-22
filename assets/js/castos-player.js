@@ -11,11 +11,11 @@ function docReady(fn) {
 
 docReady(function() {
 	/* Get Our Elements */
-	let players = document.querySelectorAll('.castos-player');
+	let players = document.querySelectorAll('.ssp-html-player');
 
 	players.forEach(function (player) {
 		let playerId = player.dataset.player_id,
-			playerData = window['ssp_castos_player_' + playerId],
+			playerData = window['ssp_html_player_' + playerId],
 			episodeId = player.dataset.episode,
 			playback = player.querySelector('.ssp-playback'),
 			audio,
@@ -430,7 +430,7 @@ docReady(function() {
 		function initKeyboardListeners() {
 			document.addEventListener( 'keydown', ( e ) => {
 				// If the Space button was pressed and any of the player element is focused, toggle playback.
-				if ( ! document.activeElement.closest( '.castos-player' ) ) {
+				if ( ! document.activeElement.closest( '.ssp-html-player' ) ) {
 					return;
 				}
 

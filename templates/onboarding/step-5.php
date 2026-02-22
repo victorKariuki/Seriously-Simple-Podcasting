@@ -23,7 +23,7 @@
 		<div class="ssp-onboarding__submit ssp-onboarding__links">
 			<div class="ssp-onboarding__links-item">
 				<h2><?php _e( 'Video Resources', 'seriously-simple-podcasting' ); ?></h2>
-				<p><?php _e( 'Explore the world of podcasting with WordPress, Seriously Simple Podcasting & Castos.', 'seriously-simple-podcasting' ); ?></p>
+				<p><?php _e( 'Explore the world of podcasting with WordPress, Simple Podcasting & Castos.', 'seriously-simple-podcasting' ); ?></p>
 				<a target="_blank" href="https://www.youtube.com/playlist?list=PLQX-MHyR9D1X3U5YYXY4HO7goClC8hBQW" class="button grey">
 					<span><?php _e( 'Browse Resources', 'seriously-simple-podcasting' ); ?></span>
 				</a>
@@ -31,7 +31,7 @@
 
 			<div class="ssp-onboarding__links-item">
 				<h2><?php _e( 'Creating your first episode', 'seriously-simple-podcasting' ); ?></h2>
-				<p><?php _e( 'Get started by creating your first episode with Seriously Simple Podcasting.', 'seriously-simple-podcasting' ); ?></p>
+				<p><?php _e( 'Get started by creating your first episode with Simple Podcasting.', 'seriously-simple-podcasting' ); ?></p>
 				<a href="<?php echo admin_url('post-new.php?post_type=' . SSP_CPT_PODCAST) ?>" class="button">
 					<span><?php _e( 'Let\'s Start', 'seriously-simple-podcasting' ); ?></span>
 				</a>

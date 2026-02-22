@@ -36,7 +36,7 @@ const SSPSidebarPanel = () => {
 					onClick={ () => setSSPSectionOpen( ! isSSPSectionOpen) }
 					aria-expanded={ isSSPSectionOpen }
 				>
-					{ __('Seriously Simple Podcasting', 'seriously-simple-podcasting') }
+					{ __('Simple Podcasting', 'seriously-simple-podcasting') }
 					<span>
 						<svg viewBox="0 0 24 24"
 							 xmlns="http://www.w3.org/2000/svg" width="24"

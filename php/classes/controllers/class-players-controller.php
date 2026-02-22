@@ -86,7 +86,7 @@ class Players_Controller {
 		$nonce     = filter_input( INPUT_GET, 'nonce' );
 		$player_id = filter_input( INPUT_GET, 'player_id' );
 
-		if ( ! $atts || ! $page || ! wp_verify_nonce($nonce, 'ssp_castos_player_' . $player_id) ) {
+		if ( ! $atts || ! $page || ! wp_verify_nonce( $nonce, 'ssp_html_player_' . $player_id ) ) {
 			wp_send_json_error();
 		}
 
@@ -257,10 +257,10 @@ class Players_Controller {
 		// For the case if multiple players are rendered on the same page, we need to generate the player id;
 		$player_id = wp_rand();
 
-		wp_localize_script( 'ssp-castos-player', 'ssp_castos_player_' . $player_id, array(
+		wp_localize_script( 'ssp-castos-player', 'ssp_html_player_' . $player_id, array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'atts'     => $atts,
-			'nonce'    => wp_create_nonce( 'ssp_castos_player_' . $player_id ),
+			'nonce'    => wp_create_nonce( 'ssp_html_player_' . $player_id ),
 		) );
 		$this->enqueue_player_assets();
 

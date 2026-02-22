@@ -34,7 +34,7 @@ class SSP_Functions_Test extends WPTestCase {
 		$out = ob_get_flush();
 
 		$this->assertStringContainsString( '<div class="notice notice-warning">', $out );
-		$this->assertStringContainsString( 'You are using the Seriously Simple Podcasting', $out );
+		$this->assertStringContainsString( 'You are using the Simple Podcasting', $out );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class SSP_Functions_Test extends WPTestCase {
 		ssp_php_version_notice();
 		$res = ob_get_flush();
 
-		$this->assertStringContainsString( 'The Seriously Simple Podcasting plugin requires PHP version 5.6 or higher. Please contact your web host to upgrade your PHP version or deactivate the plugin.', $res );
+		$this->assertStringContainsString( 'The Simple Podcasting plugin requires PHP version 5.6 or higher. Please contact your web host to upgrade your PHP version or deactivate the plugin.', $res );
 		$this->assertStringContainsString( 'We apologise for any inconvenience.', $res );
 	}
 
@@ -91,7 +91,7 @@ class SSP_Functions_Test extends WPTestCase {
 		ssp_vendor_notice();
 		$out = ob_get_flush();
 
-		$this->assertStringContainsString( 'The Seriously Simple Podcasting vendor directory is missing or broken, please re-download/reinstall the plugin.', $out );
+		$this->assertStringContainsString( 'The Simple Podcasting vendor directory is missing or broken, please re-download/reinstall the plugin.', $out );
 		$this->assertStringContainsString( 'We apologise for any inconvenience.', $out );
 	}
 

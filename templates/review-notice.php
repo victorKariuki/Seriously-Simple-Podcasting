@@ -7,7 +7,7 @@
 <div class="notice notice-info ssp-review-notice js-ssp-review-notice">
 	<div class="ssp-review-notice__text">
 		<p>
-			<?php _e( 'Hey, It seems you have been using Seriously Simple Podcasting for at least 7 days now -
+			<?php _e( 'Hey, It seems you have been using Simple Podcasting for at least 7 days now -
 			that\'s awesome!', 'seriously-simple-podcasting' ); ?>
 		</p>
 		<p>
